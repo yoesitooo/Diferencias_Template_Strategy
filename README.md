@@ -1,6 +1,11 @@
 # Robot Design Lab: Strategy vs Template Method
 
+## Integrantes
+ - Sebastian Jaramillo Hernandes - 20241020002
+ - Jhoe Luis Jeanpaul Miranda Alvarez - 20241020022
+
 Este proyecto es una demostración gráfica e interactiva de las diferencias fundamentales entre los patrones de diseño **Strategy** y **Template Method**, implementada íntegramente mediante Inteligencia Artificial (Antigravity).
+
 
 ## 🚀 Cómo empezar
 Simplemente abre el archivo `index.html` en cualquier navegador moderno (Chrome, Firefox, Edge). No requiere dependencias externas ni servidores complejos.
