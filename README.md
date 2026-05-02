@@ -43,3 +43,16 @@ Se utiliza para el **Sistema de Navegación**.
 
 ---
 *Generado por Antigravity (IA) para propósitos educativos.*
+
+### Algunas fotos visaules de la pantalla con los promts 
+1.
+<img width="1370" height="800" alt="Captura de pantalla 2026-05-02 113927" src="https://github.com/user-attachments/assets/3857316b-9096-46ab-8980-ef1c8887dbc8" />
+2.
+<img width="1550" height="811" alt="Captura de pantalla 2026-05-02 114441" src="https://github.com/user-attachments/assets/5cb6e81c-5610-4ed0-bf92-907986012ad0" />
+3. (procesos pre respuesta, se previsualiza literalmente lo que hace el agente de IA)
+<img width="1628" height="700" alt="Captura de pantalla 2026-05-02 123647" src="https://github.com/user-attachments/assets/2ee492b3-e2d2-4e7b-8889-c6f22c645d48" />
+<img width="481" height="899" alt="Captura de pantalla 2026-05-02 121630" src="https://github.com/user-attachments/assets/543ee7d3-83aa-407d-8b2e-8be341b07889" />
+<img width="376" height="592" alt="Captura de pantalla 2026-05-02 115207" src="https://github.com/user-attachments/assets/88659353-67c7-4dd3-ae07-591bc7587c4f" />
+<img width="1421" height="475" alt="Captura de pantalla 2026-05-02 123951" src="https://github.com/user-attachments/assets/645a0fb0-8bd3-44d9-ba67-8f3ea2183ae4" />
+
+
