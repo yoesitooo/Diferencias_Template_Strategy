@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robot Design Lab | Strategy vs Template Method</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <aside class="sidebar">
+        <div>
+            <h1>Robot Lab</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Demostración de Patrones de Diseño</p>
+        </div>
+
+        <div class="section">
+            <span class="pattern-badge badge-template">Template Method</span>
+            <h2>1. Ensamblar Robot</h2>
+            <div class="description">
+                El proceso de construcción es una estructura fija (Esqueleto). Las subclases solo implementan pasos específicos.
+            </div>
+            <div class="button-group">
+                <button id="btn-build-combat" class="btn-combat">CombatBot (Láser)</button>
+                <button id="btn-build-repair" class="btn-repair">RepairBot (Herramientas)</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <span class="pattern-badge badge-strategy">Strategy</span>
+            <h2>2. Sistema de Navegación</h2>
+            <div class="description">
+                El comportamiento de movimiento se puede intercambiar dinámicamente sin cambiar al robot.
+            </div>
+            <div class="button-group">
+                <button id="btn-strat-patrol" class="active">Patrulla Automática</button>
+                <button id="btn-strat-follow">Seguir Cursor</button>
+                <button id="btn-strat-orbit">Órbita Circular</button>
+            </div>
+        </div>
+
+        <div class="section" style="margin-top: auto;">
+            <div class="description" style="border-left-color: var(--primary);">
+                <strong>Diferencia Clave:</strong><br>
+                Template Method usa <em>Herencia</em> para variar partes de un algoritmo fijo.<br><br>
+                Strategy usa <em>Composición</em> para intercambiar algoritmos completos.
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <canvas id="renderCanvas"></canvas>
+        
+        <div class="overlay-info" id="info-panel">
+            <h3 id="robot-name">Esperando Construcción...</h3>
+            <p id="robot-desc">Selecciona un tipo de robot para iniciar el proceso de ensamblaje mediante Template Method.</p>
+        </div>
+
+        <div class="log-container" id="event-log">
+            <div class="log-entry">Sistema iniciado.</div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/patterns/TemplateMethod.js"></script>
+    <script src="js/patterns/Strategy.js"></script>
+    <script src="js/components/Robot.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
