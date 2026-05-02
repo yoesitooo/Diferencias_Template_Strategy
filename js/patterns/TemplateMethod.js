@@ -1,76 +1,116 @@
 /**
+ * ============================================================
  * PATRÓN: TEMPLATE METHOD
- * Define el esqueleto de un algoritmo en una operación, delegando algunos pasos a las subclases.
+ * ============================================================
+ * Define el ESQUELETO de un algoritmo en la clase base.
+ * Las subclases implementan los pasos específicos sin cambiar
+ * la estructura general del algoritmo.
+ *
+ * El método assembleRobot() es el "Template Method":
+ * - Llama a pasos concretos (comunes a todos los robots)
+ * - Llama a pasos abstractos (que cada subclase sobreescribe)
+ * ============================================================
  */
 
-// Clase Abstracta (Template)
 class RobotFactory {
-    // El "Template Method" - Define la estructura fija
-    async assembleRobot(canvas) {
-        console.log("Iniciando secuencia de ensamblaje...");
-        
-        const robot = new Robot(canvas);
-        
-        // Pasos del algoritmo
-        this.prepareChassis(robot);
-        await this.delay(500);
-        
-        this.installCore(robot);
-        await this.delay(500);
-        
-        // Paso variable (Hook/Abstract) que implementarán las subclases
-        this.installSpecialModule(robot);
-        await this.delay(500);
-        
-        this.finalize(robot);
-        
+    // ★ EL TEMPLATE METHOD — define el flujo fijo, inmutable
+    async assembleRobot(x, y, canvas, onStep) {
+        const robot = new Robot(x, y, canvas);
+
+        // Paso 1: Común a TODOS los robots (concreto)
+        await this._step(robot, () => this.prepareChassis(robot), 'Paso 1: Preparando chasis reforzado...', '#38bdf8', onStep);
+
+        // Paso 2: Común a TODOS los robots (concreto)
+        await this._step(robot, () => this.installCore(robot), 'Paso 2: Instalando núcleo de energía central...', '#818cf8', onStep);
+
+        // Paso 3: ABSTRACTO — cada subclase implementa esto de forma diferente
+        await this._step(robot, () => this.installSpecialModule(robot), `Paso 3: ${this.getModuleName()}`, this.getModuleColor(), onStep);
+
+        // Paso 4: Común a TODOS los robots (concreto)
+        await this._step(robot, () => this.finalize(robot), 'Paso 4: Robot ensamblado y operativo ✓', '#10b981', onStep);
+
         return robot;
     }
 
-    // Paso común
+    // ─── Pasos Concretos (heredados tal cual) ───────────────
     prepareChassis(robot) {
-        robot.log("Preparando chasis reforzado...");
+        robot.buildStage = 1;
         robot.parts.body = true;
     }
 
-    // Paso común
     installCore(robot) {
-        robot.log("Instalando núcleo de energía central...");
+        robot.buildStage = 2;
         robot.parts.core = true;
     }
 
-    // Paso abstracto (debe ser implementado por subclases)
-    installSpecialModule(robot) {
-        throw new Error("El método installSpecialModule debe ser implementado");
-    }
-
-    // Paso común
     finalize(robot) {
-        robot.log("Secuencia de ensamblaje completada con éxito.");
+        robot.buildStage = 4;
         robot.isReady = true;
     }
 
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
+    // ─── Paso Abstracto (DEBE ser sobreescrito) ─────────────
+    installSpecialModule(robot) {
+        throw new Error(`[Template Method] El método installSpecialModule() DEBE ser implementado por ${this.constructor.name}`);
+    }
+
+    getModuleName() { return 'Módulo genérico'; }
+    getModuleColor() { return '#94a3b8'; }
+
+    // ─── Helper de animación por pasos ──────────────────────
+    _step(robot, action, message, color, onStep) {
+        action();
+        if (onStep) onStep(message, color, robot);
+        return new Promise(resolve => setTimeout(resolve, 600));
     }
 }
 
-// Subclase Concreta A
+// ═══════════════════════════════════════════════════════════
+// SUBCLASE A: CombatBot
+// Sobreescribe installSpecialModule() con módulo de ataque
+// ═══════════════════════════════════════════════════════════
 class CombatRobotFactory extends RobotFactory {
     installSpecialModule(robot) {
-        robot.log("INSTALANDO: Cañón Láser de Pulso (Módulo de Combate)");
+        robot.buildStage = 3;
         robot.type = 'COMBAT';
         robot.color = '#ef4444';
+        robot.accentColor = '#fca5a5';
         robot.parts.weapon = 'LASER';
+        robot.label = 'CombatBot';
     }
+    getModuleName() { return 'Instalando Cañón Láser de Pulso [COMBATE]'; }
+    getModuleColor() { return '#ef4444'; }
 }
 
-// Subclase Concreta B
+// ═══════════════════════════════════════════════════════════
+// SUBCLASE B: RepairBot
+// Sobreescribe installSpecialModule() con módulo de reparación
+// ═══════════════════════════════════════════════════════════
 class RepairRobotFactory extends RobotFactory {
     installSpecialModule(robot) {
-        robot.log("INSTALANDO: Brazo Hidráulico y Soldador (Módulo de Reparación)");
+        robot.buildStage = 3;
         robot.type = 'REPAIR';
         robot.color = '#22c55e';
+        robot.accentColor = '#86efac';
         robot.parts.weapon = 'WRENCH';
+        robot.label = 'RepairBot';
     }
+    getModuleName() { return 'Instalando Brazo Hidráulico y Soldador [REPARACIÓN]'; }
+    getModuleColor() { return '#22c55e'; }
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUBCLASE C: ScoutBot  ← NUEVA
+// Sobreescribe installSpecialModule() con módulo de escaneo
+// ═══════════════════════════════════════════════════════════
+class ScoutRobotFactory extends RobotFactory {
+    installSpecialModule(robot) {
+        robot.buildStage = 3;
+        robot.type = 'SCOUT';
+        robot.color = '#f59e0b';
+        robot.accentColor = '#fde68a';
+        robot.parts.weapon = 'RADAR';
+        robot.label = 'ScoutBot';
+    }
+    getModuleName() { return 'Instalando Sistema de Radar y Sigilo [EXPLORACIÓN]'; }
+    getModuleColor() { return '#f59e0b'; }
 }

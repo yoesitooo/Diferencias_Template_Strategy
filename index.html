@@ -4,66 +4,218 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Robot Design Lab | Strategy vs Template Method</title>
+    <meta name="description" content="Demostración gráfica interactiva de los patrones de diseño Strategy y Template Method con campo de batalla multi-robot.">
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <aside class="sidebar">
-        <div>
+    <!-- ═══════════════════════════ SIDEBAR IZQUIERDO ═════════════════════════ -->
+    <aside class="sidebar" id="sidebar-left">
+        <div class="logo-area">
             <h1>Robot Lab</h1>
-            <p style="color: var(--text-muted); font-size: 0.875rem;">Demostración de Patrones de Diseño</p>
+            <p class="subtitle">Strategy vs Template Method</p>
         </div>
 
-        <div class="section">
-            <span class="pattern-badge badge-template">Template Method</span>
-            <h2>1. Ensamblar Robot</h2>
-            <div class="description">
-                El proceso de construcción es una estructura fija (Esqueleto). Las subclases solo implementan pasos específicos.
+        <!-- SECCIÓN TEMPLATE METHOD -->
+        <section class="panel">
+            <div class="panel-header">
+                <span class="badge badge-template">Template Method</span>
+                <h2>Ensamblar Robot</h2>
             </div>
-            <div class="button-group">
-                <button id="btn-build-combat" class="btn-combat">CombatBot (Láser)</button>
-                <button id="btn-build-repair" class="btn-repair">RepairBot (Herramientas)</button>
-            </div>
-        </div>
+            <p class="panel-desc">
+                El flujo de construcción es <strong>fijo</strong>. Las subclases solo implementan
+                el módulo especial (Paso 3). Usa <em>herencia</em>.
+            </p>
 
-        <div class="section">
-            <span class="pattern-badge badge-strategy">Strategy</span>
-            <h2>2. Sistema de Navegación</h2>
-            <div class="description">
-                El comportamiento de movimiento se puede intercambiar dinámicamente sin cambiar al robot.
+            <!-- Indicador de progreso de construcción -->
+            <div class="build-progress">
+                <div class="progress-step" data-label="Chasis">1</div>
+                <div class="progress-step" data-label="Núcleo">2</div>
+                <div class="progress-step" data-label="Módulo">3</div>
+                <div class="progress-step" data-label="Listo">4</div>
             </div>
-            <div class="button-group">
-                <button id="btn-strat-patrol" class="active">Patrulla Automática</button>
-                <button id="btn-strat-follow">Seguir Cursor</button>
-                <button id="btn-strat-orbit">Órbita Circular</button>
-            </div>
-        </div>
 
-        <div class="section" style="margin-top: auto;">
-            <div class="description" style="border-left-color: var(--primary);">
-                <strong>Diferencia Clave:</strong><br>
-                Template Method usa <em>Herencia</em> para variar partes de un algoritmo fijo.<br><br>
-                Strategy usa <em>Composición</em> para intercambiar algoritmos completos.
+            <div class="btn-group">
+                <button id="btn-build-combat" class="btn-build btn-combat">
+                    <span class="btn-icon">⚔️</span> CombatBot <small>Cañón Láser</small>
+                </button>
+                <button id="btn-build-repair" class="btn-build btn-repair">
+                    <span class="btn-icon">🔧</span> RepairBot <small>Brazo Mecánico</small>
+                </button>
+                <button id="btn-build-scout" class="btn-build btn-scout">
+                    <span class="btn-icon">📡</span> ScoutBot <small>Radar Activo</small>
+                </button>
             </div>
-        </div>
+
+            <div class="meta-row">
+                <span>Robots en campo:</span>
+                <strong id="robot-count">0/5</strong>
+                <button id="btn-clear" class="btn-clear">Limpiar</button>
+            </div>
+        </section>
+
+        <!-- SECCIÓN STRATEGY -->
+        <section class="panel">
+            <div class="panel-header">
+                <span class="badge badge-strategy">Strategy</span>
+                <h2>Modo de Movimiento</h2>
+            </div>
+            <p class="panel-desc">
+                El algoritmo de movimiento se <strong>intercambia en vivo</strong> sin modificar el robot.
+                Usa <em>composición</em>.
+            </p>
+
+            <div class="apply-toggle">
+                <label>
+                    <input type="checkbox" id="chk-apply-all" checked>
+                    Aplicar a todos los robots
+                </label>
+            </div>
+
+            <div class="btn-group">
+                <button id="btn-strat-patrol" class="btn-strategy active">
+                    <span class="strat-dot" style="background:#38bdf8"></span>
+                    Patrulla Automática
+                </button>
+                <button id="btn-strat-follow" class="btn-strategy">
+                    <span class="strat-dot" style="background:#f472b6"></span>
+                    Seguir Cursor
+                </button>
+                <button id="btn-strat-orbit" class="btn-strategy">
+                    <span class="strat-dot" style="background:#a78bfa"></span>
+                    Órbita Circular
+                </button>
+                <button id="btn-strat-chaos" class="btn-strategy">
+                    <span class="strat-dot" style="background:#fb923c"></span>
+                    Movimiento Caótico
+                </button>
+                <button id="btn-strat-formation" class="btn-strategy">
+                    <span class="strat-dot" style="background:#34d399"></span>
+                    Formación en V
+                </button>
+            </div>
+        </section>
+
+        <!-- Info del robot seleccionado -->
+        <section class="panel panel-info">
+            <div class="panel-header">
+                <h2>Robot Seleccionado</h2>
+            </div>
+            <div id="info-name" class="info-name">Sin robot seleccionado</div>
+            <div id="info-type" class="info-sub"></div>
+            <div id="info-strategy" class="info-sub"></div>
+            <small style="color:var(--text-muted); margin-top: 0.5rem; display:block;">
+                Haz click sobre un robot en el canvas para seleccionarlo.
+            </small>
+        </section>
     </aside>
 
+    <!-- ═══════════════════════════ CANVAS CENTRAL ════════════════════════════ -->
     <main class="main-content">
         <canvas id="renderCanvas"></canvas>
-        
-        <div class="overlay-info" id="info-panel">
-            <h3 id="robot-name">Esperando Construcción...</h3>
-            <p id="robot-desc">Selecciona un tipo de robot para iniciar el proceso de ensamblaje mediante Template Method.</p>
-        </div>
 
-        <div class="log-container" id="event-log">
-            <div class="log-entry">Sistema iniciado.</div>
+        <!-- Log de eventos -->
+        <div class="event-log-wrap">
+            <div class="log-title">📟 Log de Eventos</div>
+            <div class="event-log" id="event-log"></div>
         </div>
     </main>
 
-    <!-- Scripts -->
+    <!-- ═══════════════════════════ SIDEBAR DERECHO ══════════════════════════ -->
+    <aside class="sidebar sidebar-right" id="sidebar-right">
+        <!-- Diferencia conceptual -->
+        <section class="panel">
+            <div class="panel-header">
+                <h2>¿Por qué son diferentes?</h2>
+            </div>
+            <div class="comparison-table">
+                <div class="cmp-row header">
+                    <div></div>
+                    <div class="cmp-tm">Template Method</div>
+                    <div class="cmp-st">Strategy</div>
+                </div>
+                <div class="cmp-row">
+                    <div>Mecanismo</div>
+                    <div class="cmp-tm">Herencia</div>
+                    <div class="cmp-st">Composición</div>
+                </div>
+                <div class="cmp-row">
+                    <div>Variación</div>
+                    <div class="cmp-tm">En subclases</div>
+                    <div class="cmp-st">En objetos externos</div>
+                </div>
+                <div class="cmp-row">
+                    <div>Cambio en runtime</div>
+                    <div class="cmp-tm">No</div>
+                    <div class="cmp-st">Sí ✓</div>
+                </div>
+                <div class="cmp-row">
+                    <div>Nivel de acoplamiento</div>
+                    <div class="cmp-tm">Alto</div>
+                    <div class="cmp-st">Bajo ✓</div>
+                </div>
+                <div class="cmp-row">
+                    <div>Flujo</div>
+                    <div class="cmp-tm">Fijo</div>
+                    <div class="cmp-st">Flexible</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Snippet de código activo -->
+        <section class="panel">
+            <div class="panel-header">
+                <h2>Código Activo</h2>
+                <span class="badge badge-strategy" style="font-size:0.65rem">Strategy</span>
+            </div>
+            <pre id="code-snippet" class="code-block">// Selecciona una estrategia para ver el código...</pre>
+        </section>
+
+        <!-- UML simplificado -->
+        <section class="panel">
+            <div class="panel-header">
+                <h2>Estructura UML</h2>
+            </div>
+            <div class="uml-diagram">
+                <!-- Template Method -->
+                <div class="uml-section">
+                    <div class="uml-class abstract">«abstract»<br>RobotFactory</div>
+                    <div class="uml-methods">
+                        <div class="uml-method fixed">+ assembleRobot() 🔒</div>
+                        <div class="uml-method fixed">+ prepareChassis()</div>
+                        <div class="uml-method fixed">+ installCore()</div>
+                        <div class="uml-method abstract">+ installSpecialModule() ◇</div>
+                        <div class="uml-method fixed">+ finalize()</div>
+                    </div>
+                    <div class="uml-children">
+                        <div class="uml-child combat">CombatBot<br><small>LASER</small></div>
+                        <div class="uml-child repair">RepairBot<br><small>WRENCH</small></div>
+                        <div class="uml-child scout">ScoutBot<br><small>RADAR</small></div>
+                    </div>
+                </div>
+                <hr style="border-color: var(--border); margin: 1rem 0;">
+                <!-- Strategy -->
+                <div class="uml-section">
+                    <div class="uml-class interface">«interface»<br>MovementStrategy</div>
+                    <div class="uml-methods">
+                        <div class="uml-method abstract">+ update() ◇</div>
+                        <div class="uml-method abstract">+ emitParticles() ◇</div>
+                    </div>
+                    <div class="uml-children">
+                        <div class="uml-child patrol">Patrol</div>
+                        <div class="uml-child follow">Follow</div>
+                        <div class="uml-child orbit">Orbit</div>
+                        <div class="uml-child chaos">Chaos</div>
+                        <div class="uml-child formation">Formation</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </aside>
+
+    <!-- Scripts — orden importa: patterns antes de components, components antes de main -->
     <script src="js/patterns/TemplateMethod.js"></script>
     <script src="js/patterns/Strategy.js"></script>
     <script src="js/components/Robot.js"></script>
